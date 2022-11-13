@@ -1,0 +1,72 @@
+@startuml
+'https://plantuml.com/class-diagram
+'skinparam classAttributeIconSize 0
+'чтобы заменить символ видимости на тектовое представление
+
+interface DataReader
+class TextDataReader{
++self.key: str = ""
++self.students: DataType = {}
++read(self, path: str) -> DataType
+}
+
+class JsonDataReader{
++self.key: str = ""
++self.students: DataType = {}
++read(self, path: str) -> DataType
+}
+
+class CalcRating{
++self.data: DataType = data
++self.rating: RatingType = {}
++calc(self) -> RatingType
+}
+
+class CalcAcadFail{
++self.data: DataType = data
++self.rating: RatingType = [0, "Все студенты сдали сессию !", {}]
++calc(self) -> RatingType
+}
+
+class TestAcadFail{
++input_data(self) -> tuple[DataType, DataType, RatingType, RatingType]
++test_calc_notacadfail(self, input_data: tuple[DataType, RatingType]) -> None
++test_init_calc_acadfail(self, input_data: tuple[DataType, RatingType]) -> None
++test_calc_acadfail(self, input_data: tuple[DataType, RatingType]) -> None
+
+}
+
+class TestCalcRating{
++input_data(self) -> tuple[DataType, RatingsType]
++test_init_calc_rating(self, input_data: tuple[DataType,RatingsType]) -> None
++test_calc(self, input_data: tuple[DataType, RatingsType]) -> None
+}
+
+class TestJsonDataReader{
++file_and_data_content(self) -> tuple[str, DataType]
++filepath_and_data(self,  file_and_data_content: tuple[str, DataType], tmpdir) -> tuple[str, DataType]
++test_read(self, filepath_and_data: tuple[str, DataType]) -> None
++noncoorrect_path_to_file() -> tuple[str, DataType]
++test_noncorrect_path_to_file(noncoorrect_path_to_file: tuple[str, DataType]) -> None
+
+}
+
+class TestTextDataReader{
++file_and_data_content(self) -> tuple[str, DataType]
++filepath_and_data(self, file_and_data_content: tuple[str, DataType], tmpdir) -> tuple[str, DataType]
++test_read(self, filepath_and_data: tuple[str, DataType]) -> None
+
+}
+
+TextDataReader .|> DataReader
+JsonDataReader .|> DataReader
+
+TestCalcRating o- CalcRating
+TestAcadFail o- CalcAcadFail
+TestTextDataReader o- TextDataReader
+TestJsonDataReader o- JsonDataReader
+
+TestTextDataReader -[hidden]-> TestJsonDataReader
+TestJsonDataReader -[hidden]-> TestAcadFail
+TestAcadFail -[hidden]-> TestCalcRating
+@enduml
